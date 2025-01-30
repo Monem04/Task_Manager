@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/ui/screen/forgot_password_verify_email_screen.dart';
+import 'package:untitled/ui/screen/forgot_password_verify_opt_screen.dart';
+import 'package:untitled/ui/screen/main_bottom_nev_screen.dart';
+import 'package:untitled/ui/screen/reset_password_screen.dart';
 import 'package:untitled/ui/screen/sign_in_screen.dart';
+import 'package:untitled/ui/screen/sign_up_screen.dart';
 import 'package:untitled/ui/screen/splash_screen.dart';
 import 'package:untitled/ui/utils/app_colors.dart';
 
@@ -16,7 +21,12 @@ class TaskManagerApp extends StatelessWidget {
           titleLarge: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.w600,
+          ),
+          titleSmall: TextStyle(
+            color: Colors.grey,
+            fontSize: 14,
           )
+
         ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
@@ -57,6 +67,16 @@ class TaskManagerApp extends StatelessWidget {
         }
         else if (settings.name == SignInScreen.name){
           widget = const SignInScreen();
+        }else if (settings.name == SignUpScreen.name){
+          widget = const SignUpScreen();
+        }else if (settings.name == ForgotPasswordVerifyEmailScreen.name){
+          widget = const ForgotPasswordVerifyEmailScreen();
+        }else if (settings.name == ForgotPasswordVerifyOptScreen.name){
+          widget = const ForgotPasswordVerifyOptScreen();
+        }else if (settings.name == ResetPasswordScreen.name){
+          widget = const ResetPasswordScreen();
+        }else if (settings.name == MainBottomNevScreen.name){
+          widget = const MainBottomNevScreen();
         }
         return MaterialPageRoute(builder: (_) => widget);
       },
