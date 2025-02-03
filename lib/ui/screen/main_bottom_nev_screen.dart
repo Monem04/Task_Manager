@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/ui/screen/new_task_list_screen.dart';
+import 'package:untitled/ui/screen/progress_task_list_screen.dart';
 
 class MainBottomNevScreen extends StatefulWidget {
   const MainBottomNevScreen({super.key});
@@ -14,7 +15,7 @@ class _MainBottomNevScreenState extends State<MainBottomNevScreen> {
   int _selectedIndex = 0;
   final List<Widget> _screen = const [
     NewTaskListScreen(),
-    NewTaskListScreen(),
+    ProgressTaskListScreen(),
     NewTaskListScreen(),
     NewTaskListScreen(),
   ];
