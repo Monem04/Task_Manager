@@ -6,13 +6,13 @@ class NetworkResponse {
   final int statusCode;
   final Map<String, dynamic>? responseData;
   final bool isSuccess;
-  final String? errorMessage;
+  final String errorMessage;
 
   NetworkResponse({
     required this.isSuccess,
     required this.statusCode,
-    required this.responseData,
-    required this.errorMessage,
+    this.responseData,
+    this.errorMessage ='Something went arong',
   });
 }
 
@@ -23,6 +23,7 @@ class NetworkCaller {
     try {
       Uri uri = Uri.parse(url);
       debugPrint('URL => $url');
+      //debugPrint('BODY => $');
       Response response = await get(uri);
       debugPrint('Response Code => ${response.statusCode}');
       debugPrint('Response Data => ${response.body}');
