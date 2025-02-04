@@ -1,10 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:untitled/data/services/network_caller.dart';
+import 'package:untitled/data/utils/urls.dart';
 import 'package:untitled/ui/screen/forgot_password_verify_email_screen.dart';
 import 'package:untitled/ui/screen/main_bottom_nev_screen.dart';
 import 'package:untitled/ui/screen/sign_up_screen.dart';
 import 'package:untitled/ui/utils/app_colors.dart';
+import 'package:untitled/ui/widgets/centered_circuler_progress_indicator.dart';
 import 'package:untitled/ui/widgets/screen_backgrount.dart';
+import 'package:untitled/ui/widgets/snak_bar_message.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -19,8 +23,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordlTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-
+  bool _signInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +51,12 @@ class _SignInScreenState extends State<SignInScreen> {
                     decoration: InputDecoration(
                       hintText: 'Email',
                     ),
+                    validator: (String? value) {
+                      if (value?.trim().isEmpty ?? true) {
+                        return 'Enter a valid email address';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(
                     height: 8,
@@ -58,13 +67,24 @@ class _SignInScreenState extends State<SignInScreen> {
                     decoration: InputDecoration(
                       hintText: 'Password',
                     ),
+                    validator: (String? value) {
+                      if (value?.trim().isEmpty ?? true) {
+                        return 'Enter your valid password';
+                      }
+                      if (value!.length < 6) {
+                        return 'Enter a password more then 6 letters';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, MainBottomNevScreen.name);
-                    },
-                    child: Icon(Icons.arrow_circle_right_outlined),
+                  Visibility(
+                    visible: _signInProgress == false,
+                    replacement: const CenteredCirculerProgressIndicator(),
+                    child: ElevatedButton(
+                      onPressed: _onTapSignInButton,
+                      child: Icon(Icons.arrow_circle_right_outlined),
+                    ),
                   ),
                   const SizedBox(
                     height: 40,
@@ -74,7 +94,8 @@ class _SignInScreenState extends State<SignInScreen> {
                       children: [
                         TextButton(
                           onPressed: () {
-                            Navigator.pushReplacementNamed(context, ForgotPasswordVerifyEmailScreen.name);
+                            Navigator.pushReplacementNamed(
+                                context, ForgotPasswordVerifyEmailScreen.name);
                           },
                           child: Text('Forgot Password'),
                         ),
@@ -90,7 +111,37 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
-  Widget _builsSignUpSection(){
+
+  void _onTapSignInButton() {
+    if (_formKey.currentState!.validate()) {
+      _signIn();
+    }
+  }
+
+  Future<void> _signIn() async {
+    _signInProgress = true;
+    setState(() {});
+    Map<String, dynamic> requestBody = {
+      "email": _emailTEController.text.trim(),
+      "password": _passwordlTEController.text,
+    };
+    final NetworkResponse response =
+        await NetworkCaller.postRequest(url: Urls.loginUrl, body: requestBody);
+
+    if (response.isSuccess) {
+      Navigator.pushReplacementNamed(context, MainBottomNevScreen.name);
+    } else {
+      _signInProgress = false;
+      setState(() {});
+      if(response.statusCode ==401){
+        showSnakBarMessage(context, 'Email/Password is invalid! Try again..');
+
+      }
+      showSnakBarMessage(context, response.errorMessage);
+    }
+  }
+
+  Widget _builsSignUpSection() {
     return RichText(
       text: TextSpan(
         text: "Don't have an account? ",
@@ -100,11 +151,12 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         children: [
           TextSpan(
-              text: 'Sign in',
-              style: TextStyle(
-                color: AppColos.themeColor,
-              ),
-              recognizer: TapGestureRecognizer()..onTap = () {
+            text: 'Sign in',
+            style: TextStyle(
+              color: AppColos.themeColor,
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
                 Navigator.pushReplacementNamed(context, SignUpScreen.name);
               },
           ),
@@ -112,6 +164,7 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
+
   @override
   void dispose() {
     _emailTEController.dispose();

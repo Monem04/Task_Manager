@@ -108,6 +108,8 @@ class _SignInScreenState extends State<SignUpScreen> {
                     validator: (String? value) {
                       if (value?.trim().isEmpty ?? true) {
                         return 'Enter your Password';
+                      }if (value!.length<6){
+                        return 'Enter a password more then 6 letters';
                       }
                       return null;
                     },
@@ -156,7 +158,7 @@ class _SignInScreenState extends State<SignUpScreen> {
     };
 
     final NetworkResponse response = await NetworkCaller.postRequest(
-        url: Ursl.registrationUrl, body: requestParams);
+        url: Urls.registrationUrl, body: requestParams);
     _signUpInProgress = false;
     setState(() {});
     if (response.isSuccess) {
