@@ -1,7 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:untitled/data/models/user_model.dart';
 import 'package:untitled/data/services/network_caller.dart';
 import 'package:untitled/data/utils/urls.dart';
+import 'package:untitled/ui/controllers/auth_controller.dart';
 import 'package:untitled/ui/screen/forgot_password_verify_email_screen.dart';
 import 'package:untitled/ui/screen/main_bottom_nev_screen.dart';
 import 'package:untitled/ui/screen/sign_up_screen.dart';
@@ -127,8 +130,10 @@ class _SignInScreenState extends State<SignInScreen> {
     };
     final NetworkResponse response =
         await NetworkCaller.postRequest(url: Urls.loginUrl, body: requestBody);
-
     if (response.isSuccess) {
+      String token = response.responseData!['token'];
+      UserModel userModel = UserModel.fromJson(response.responseData!['data']);
+      await AuthController.saveUserData(token, userModel);
       Navigator.pushReplacementNamed(context, MainBottomNevScreen.name);
     } else {
       _signInProgress = false;
