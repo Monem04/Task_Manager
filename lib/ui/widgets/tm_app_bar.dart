@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/ui/controllers/auth_controller.dart';
+import 'package:untitled/ui/screen/sign_in_screen.dart';
 import 'package:untitled/ui/screen/update_profile_screen.dart';
 import '../utils/app_colors.dart';
 
-class TMAppBr extends StatelessWidget implements PreferredSizeWidget{
-  const TMAppBr({
-    super.key,
-    this.fromUpdateProfile = false
-  });
+class TMAppBr extends StatelessWidget implements PreferredSizeWidget {
+  const TMAppBr({super.key, this.fromUpdateProfile = false});
 
   final bool fromUpdateProfile;
 
@@ -23,18 +22,18 @@ class TMAppBr extends StatelessWidget implements PreferredSizeWidget{
           const SizedBox(width: 8),
           Expanded(
             child: GestureDetector(
-              onTap: (){
+              onTap: () {
                 if (fromUpdateProfile) return;
                 Navigator.pushNamed(context, UpdateProfileScreen.name);
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Rabbil Hassan',
+                  Text(AuthController.userModel?.fullName ?? '',
                       style: textTheme.titleSmall?.copyWith(
                         color: Colors.white,
                       )),
-                  Text('rabbil@gamil.com',
+                  Text(AuthController.userModel?.email ?? '',
                       style: textTheme.titleSmall?.copyWith(
                         color: Colors.white,
                       )),
@@ -43,7 +42,11 @@ class TMAppBr extends StatelessWidget implements PreferredSizeWidget{
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              await AuthController.clearUserData();
+              Navigator.pushNamedAndRemoveUntil(
+                  context, SignInScreen.name, (predicate) => false);
+            },
             icon: const Icon(Icons.logout),
             color: Colors.white,
           )

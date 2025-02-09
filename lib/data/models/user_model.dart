@@ -5,6 +5,10 @@ class UserModel {
   String? mobile;
   String? photo;
 
+  String get fullName{
+    return '$firstname $lastname';
+  }
+
   UserModel.fromJson(Map<String, dynamic> json) {
     email = json['email'];
     firstname = json['firstname'];
