@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled/data/models/user_model.dart';
 import 'package:untitled/data/services/network_caller.dart';
 import 'package:untitled/data/utils/urls.dart';
